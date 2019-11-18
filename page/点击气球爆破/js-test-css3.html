@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>点击气球爆炸消失</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #ccc;
+      overflow: hidden;
+    }
+
+    .boomDiv {
+      width: 160px;
+      height: 160px;
+      background-color: #ffffff;
+      border-radius: 160px 160px 50px 160px;
+      transform: rotate(45deg);
+      position: absolute;
+      box-shadow: 0px 0px 24px 2px #f2b5b5 inset;
+    }
+
+    .boomDiv::after {
+      content: '';
+      height: 0;
+      width: 0;
+      border: 5px solid rgba(0, 0, 0, 0);
+      border-right: 5px solid #e56f6f;
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      transform: rotate(45deg);
+    }
+  </style>
+</head>
+<body>
+
+<script>
+  var num = 10, moves, boomDivs = [],runer,timer;
+  var wh = window.innerHeight;
+  var ww = window.innerWidth;
+  var bz = 160;
+  init(num);
+  move();
+  runer = setInterval(move,60);
+  document.body.addEventListener('click', function (e) {
+    if (e.target.className === 'boomDiv') {
+         e.target.boom();
+          var index = boomDivs.lastIndexOf(e.target);
+          boomDivs.splice(index,1);
+          init(1);
+    }
+  }, false);
+
+  Node.prototype.boom = function(){
+    var rotate = [30,80];
+    var index = 0;
+    this.timer = setInterval(function(){
+      index++;
+      index %= 2;
+      this.speed ++;
+      this.style.top = this.offsetTop - this.speed + 'px';
+      this.style.width = this.offsetWidth - 10 + 'px';
+      this.style.height = this.offsetHeight - 10 + 'px';
+      this.style.transform = 'rotate('+rotate[index]+'deg)';
+      if(this.offsetWidth<10){
+        this.parentNode.removeChild(this);
+        clearInterval(this.timer);
+      }
+    }.bind(this),1000/60);
+  };
+
+  function move() {
+      var arr = [];
+      for (var i = 0, len = boomDivs.length; i < len; i++) {
+        arr.push(boomDivs[i].offsetTop);
+        boomDivs[i].style.top = boomDivs[i].offsetTop - boomDivs[i].speed + 'px';
+        if(boomDivs[i].offsetTop < -200){
+          boomDivs[i].parentNode.removeChild(boomDivs[i]);
+          init(1);
+        }
+      }
+  }
+  function init(num) {
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < num; i++) {
+      var div = document.createElement('div');
+      div.className = 'boomDiv';
+      div.style.left = Math.max(0, ~~(Math.random() * ww - 160)) + 'px';
+      div.style.top = wh + 'px';
+      div.speed = ~~(Math.random() * 7)+1;
+      boomDivs.push(div);
+      fragment.appendChild(div);
+    }
+    document.body.appendChild(fragment);
+  }
+</script>
+</body>
+</html>

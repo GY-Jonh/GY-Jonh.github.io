@@ -1,0 +1,105 @@
+<html>
+<head>
+    <style>
+        body.html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-size: 12px
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            font-size: 12px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            color: #333;
+        }
+
+        #sj {
+            -webkit-border-radius: 6px;
+            -moz-border-radius: 6px;
+            border-radius: 6px;
+            -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            background-color: #fff;
+            width: 240px;
+            height: 128px;
+            position: absolute;
+            right: 10px;
+            bottom: 0;
+            overflow: hidden;
+        }
+
+        #sj h3 {
+            padding: 8px 10px;
+            margin: 0;
+            font-size: 14px;
+            font-weight: normal;
+            line-height: 18px;
+            background-color: #f7f7f7;
+            border-bottom: 1px solid #ebebeb;
+            font-weight: normal;
+            color: #333;
+        }
+
+        #sj div {
+            padding: 9px 14px;
+            line-height: 20px;
+        }
+
+        #sj h3 img {
+            vertical-align: top;
+            position: relative;
+            top: -2px;
+            margin-left: 6px;
+        }
+
+        #sj h3 span {
+            float: right;
+            cursor: pointer;
+            color: #ccc;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        #sj h3 span:hover {
+            color: #666;
+        }
+
+        #sj p {
+            padding-right: 0;
+        }
+
+        #sj p a {
+            color: #37b5ed;
+        }
+
+    </style>
+</head>
+<body>
+<div id="blank" class="content" role="main">
+    <div id="sj" style="/* display:none */">
+        <h3>升级公告<img src="https://cc.7moor.com/img/new_msg.gif"><span id="close">×</span></h3>
+        <div>
+            <!-- <p>平台为了铺展语音识别的建设，目前已将录音的音频存储格式由单声道改成双声道，为了不影响您的体验，建议您在听录音时双耳都戴上耳机接听。</p> -->
+            <p class="p">天翼云呼为更好地提供服务，2018年4月11日晚进行了升级，本界面有更新，请周知。</p>
+            <!-- <p class="p"><a href="https://www.7moor.com/update" target="_blank">点击查看APP发布公告</a></p> -->
+        </div>
+    </div>
+    <script type="text/javascript">
+        var pane = document.getElementById('sj');
+        var close = document.getElementById('close');
+        close.onclick = function () {
+            pane.style.display = 'none';
+            //window.parent && window.parent.postMessage && (window.parent.postMessage("closeUpdate", "*"));
+        }
+    </script>
+
+
+</div><!-- #content -->
+
+</body>
+</html>

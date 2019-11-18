@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>3D爱心</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+            background: #000000;
+            overflow: hidden;
+        }
+
+        .out-div {
+            width: 100%;
+            height: 100%;
+            perspective: 1200px;
+            position: relative;
+        }
+
+        .in-div {
+            width: 400px;
+            height: 400px;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .middle {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            margin: auto;
+        }
+
+        .love {
+            width: 100%;
+            height: 100%;
+        }
+
+        .left,
+        .right {
+            width: 130px;
+            height: 200px;
+            border: 1px solid red;
+            border-top-left-radius: 60px;
+            border-top-right-radius: 60px;
+        }
+
+        .left {
+            transform: rotate(-45deg) translateX(-35px);
+        }
+
+        .right {
+            transform: rotate(45deg) translateX(35px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="out-div">
+        <div class="in-div middle">
+
+        </div>
+    </div>
+    <script>
+        var inDiv = document.querySelector('.in-div');
+        var bg = document.querySelector('.out-div');
+        var num = 20;
+        var aDeg = 360 / num;
+        var html = '';
+        var timer = null;
+        var resultX;//X坐标差
+        var resultY;//Y坐标差
+        var rotateX = -20, rotateY = 0;//跟CSS样式对应，wrap模块的度数
+        for (var i = 0; i < 20; i++) {
+            var deg = i * aDeg;
+            html += `
+            <div class="love middle" style=" transform: rotateY(${deg}deg);">
+                <div class="left middle"></div>
+                <div class="right middle"></div>
+            </div>
+            `;
+        }
+        inDiv.innerHTML = html;
+
+
+        bg.onmousedown = function (ev) {
+            var lastX = ev.clientX;//上一次鼠标的坐标X
+            var lastY = ev.clientY;//上一次鼠标的坐标Y
+            bg.onmousemove = function (ev) {
+                var nowX = ev.clientX;//这次一次鼠标的坐标X
+                var nowY = ev.clientY;//这次一次鼠标的坐标Y
+                resultX = nowX - lastX;
+                resultY = nowY - lastY;
+                rotateX -= resultY * 0.1;
+                rotateY += resultX * 0.1;
+                inDiv.style.cssText = "transform:rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+                lastX = nowX;
+                lastY = nowY;
+            };
+            bg.onmouseup = function (ev) {
+                bg.onmousemove = null;
+                if (timer) {
+                    clearInterval(timer);
+                }
+
+                timer = setInterval(function () {
+                    resultX *= 0.9;//控制横向转圈圈的惯性速度，值越小速度越慢
+                    resultY *= 0.5;//控制纵向翻滚的惯性速度，值越小速度越慢
+                    rotateX -= resultY;
+                    rotateY += resultX;
+                    inDiv.style.cssText = "transform:rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg)";
+                    if (Math.abs(resultX) < 0.1 && Math.abs(resultY) < 0.1) {
+                        clearInterval(timer);
+                    }
+                }, 1000 / 60);
+            };
+            return false;
+        };
+    </script>
+</body>
+
+</html>

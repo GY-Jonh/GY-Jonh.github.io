@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>节流模式</title>
+</head>
+<body>
+处理高频触发的事件或者互交动画 , 只执行最后一次
+</body>
+<script>
+    var fn = function () {
+        console.log(111);
+    }
+    window.onresize = function () {
+        clearTimeout(fn.id);
+        fn.id = setTimeout(function () {
+            fn();
+        },500);
+}
+</script>
+</html>

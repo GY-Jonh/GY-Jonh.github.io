@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>创建者模式</title>
+</head>
+<body>
+<script>
+    // 建造者模式
+    // 需求会经常有剧烈的变化 , 把一个完整的对象 分步骤创建出来
+    // 解决方案 : 把一个对象分步骤创建出来
+    // 实现的功能分步骤单利出来
+    // 通过ajax获取内容 把内容显示到页面中
+    var Human = function (name) {
+        this.name = name || '保密'
+    }
+    Human.prototype.getName = function () {
+        return this.name;
+    }
+    var work = function (zhiye) {
+        var obj = {
+            'code':function () {
+                this.zhiye = 'IT程序猿';
+                this.workDescript = '敲代码的~~';
+            },
+            'UI':function () {
+                this.zhiye = 'UI工程师';
+                this.workDescript = '画图的~~';
+            },
+            'HR':function () {
+                this.zhiye = 'HR';
+                this.workDescript = '招人打杂的';
+            }
+        };
+        obj[zhiye] && (obj[zhiye].call(this),1) || (this.workDescript = '没有该职业');
+    }
+    var jianli = function (name,zhiye) {
+        var person = new Human(name);
+        person.work = new work(zhiye);
+        return person;
+    }
+    console.log(new jianli('GY','code'))
+    console.log(new jianli("Y", "UI"));
+</script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    {{name}}
+    <input type="text" v-model="name"><span>{{name}}</span>
+
+    <br/>
+    <input type="text" v-model="age"><span>{{age}}</span>
+
+</div>
+</body>
+<script>
+
+    function Dep() {
+        this.subs = {};
+    }
+
+    Dep.prototype.addSub = function (sub,name) {
+        this.subs[name] || (this.subs[name] = []);
+        this.subs[name].push(sub);//保存watch对象
+    };
+    Dep.prototype.notify = function (name) {
+        this.subs[name].forEach(function (item) {
+            item.update();
+        });
+    };
+    
+    function Watch(vm,node,name,type) {//保存当前{{}}所在的节点
+        Dep.target = this;
+        this.vm = vm;
+        this.type = type;
+        this.node = node;
+        this.name = name;
+        this.update();
+        Dep.target = null;
+    }
+    Watch.prototype.update = function () {
+        switch (this.type){
+            case 0:
+                this.node.innerText = this.vm[this.name];
+                break;
+            case 1:
+                this.node.value = this.vm[this.name];
+                break;
+            case 2:
+                this.node.nodeValue = this.vm[this.name];
+                break;
+        }
+    };
+
+    function defineReActive(vm,key,val) {
+        var dep = new Dep();
+        Object.defineProperty(vm,key,{
+            get:function () {
+               // console.log(Dep.target);
+                Dep.target && dep.addSub(Dep.target,key);
+                return val;
+            },
+            set:function (newVal) {
+                val = newVal;
+                console.log(dep);
+                dep.notify(key);
+            }
+        })
+    }
+
+    function observe(data, vm) {
+        for (var key in data) {
+            defineReActive(vm, key, data[key]);
+        }
+    }
+
+    function complic(node, vm) {
+        var reg = /\{\{(.*)\}\}/;
+        var name;
+        if (node.nodeType == 1) {
+            if (node.hasAttribute('v-model')) {
+                name = node.getAttribute('v-model');
+                node.addEventListener('input', function (e) {
+                    vm[name] = e.target.value;
+                });
+                new Watch(vm,node,name,1);
+                node.value = vm[name];
+                node.removeAttribute('v-model');
+            } else if (reg.test(node.innerText)) {
+                name = RegExp.$1;
+                name = name.trim();
+                new Watch(vm,node,name,0);
+                node.innerText = vm[name];
+            }
+        }else if(node.nodeType == 3){
+            if (reg.test(node.nodeValue)) {
+                name = RegExp.$1;
+                name = name.trim();
+                new Watch(vm,node,name,2);
+                node.nodeValue = vm[name];
+            }
+        }
+    }
+
+    function nodeToFrag(node, vm) {
+        var frag = document.createDocumentFragment();
+        var child;
+        while (child = node.firstChild) {
+            complic(child, vm);
+            frag.appendChild(child);
+        }
+        return frag;
+    }
+
+    function Vue(options) {
+        this.data = options.data;
+        observe(this.data, this);
+        var app = document.getElementById(options.el);
+        var dom = nodeToFrag(app, this);
+        app.appendChild(dom);
+    }
+
+    var app = new Vue({
+        el: "app",
+        data: {
+            name: 'GY',
+            age: 21,
+            test:'test1'
+        }
+    })
+</script>
+</html>

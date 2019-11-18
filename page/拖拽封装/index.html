@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="dragmove.js"></script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .out{
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            position: relative;
+        }
+        .out li{
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border: 1px solid;
+        }
+        li:nth-child(1){
+            background-color: red;
+        }
+        li:nth-child(2){
+            background-color: black;
+        }
+        li:nth-child(3){
+            background-color: blue;
+        }
+        li:nth-child(4){
+            background-color: green;
+        }
+    </style>
+</head>
+<body>
+<ul class="out">
+    <li class=""></li>
+    <li class=""></li>
+    <li class=""></li>
+    <li class=""></li>
+</ul>
+</body>
+<script>
+    var lis = document.querySelectorAll('li');
+    myDrag.init(lis);
+</script>
+</html>

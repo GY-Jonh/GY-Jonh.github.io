@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>运动</title>
+    <link rel="stylesheet" href="css/index.css"/>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        #test {
+            position: relative;
+            width: 650px;
+            height: 400px;
+            margin: 50px auto;
+        }
+        ul{
+            list-style: none;
+        }
+        ul li.img{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: all .5s;
+            overflow: hidden;
+        }
+        .point{
+            display: flex;
+            justify-content:center;
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            z-index: 22;
+        }
+        .point li{
+            margin: 0 10px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: #fff;
+            cursor: pointer;
+        }
+        ul li img{
+            width: 100%;
+        }
+
+        ul li.show{
+            opacity: 1;
+        }
+        .point .checked{
+            transform: scale(1.3);
+            background-color: red;
+        }
+
+    </style>
+</head>
+<body>
+<ul id="test">
+    <li class="img show"><img src="images/1.jpg" alt=""/></li>
+    <li class="img"><img src="images/2.jpg" alt=""/></li>
+    <li class="img"><img src="images/3.jpg" alt=""/></li>
+    <li class="img"><img src="images/4.jpg" alt=""/></li>
+    <li class="img"><img src="images/5.jpg" alt=""/></li>
+    <li class="img"><img src="images/6.jpg" alt=""/></li>
+    <li>
+        <ul class="point">
+            <li class="checked"></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </li>
+</ul>
+<script src="js/sports.js"></script>
+<script>
+   var imgs = document.querySelectorAll('.img');
+    var lis = document.querySelectorAll('.point li');
+    var index = 0;
+    for(var i = 0,length = lis.length;i<length;i++){
+        (function(i){
+            lis[i].onclick = function(event){
+                if(!lis[i].classList.contains('checked')){
+                    sports(imgs[i],'opacity',1,500);
+                    sports(imgs[index],'opacity',0,500);
+//                    上边两句是运动框架实现，下边两句是CSS3动画过渡实现
+//                    imgs[i].classList.add('show');
+//                    imgs[index].classList.remove('show');
+                    this.classList.add('checked');
+                    lis[index].classList.remove('checked');
+                    index = i;
+                }
+            }
+        })(i)
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>获取百度信息test</title>
+    <script src="Ajax.js"></script>
+    <style>
+       ::-webkit-scrollbar{
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+<button id="getBtn">点击</button>
+<div style="margin-top: 20px;    width: 1200px;    height: 1200px;" id="content"></div>
+</body>
+<script>
+    document.getElementById('getBtn').onclick = function (){
+        Ajax({
+            method:'post',
+            url:'package.json',
+            data:{
+                wd:'taobao'
+            },
+            success: function(data){
+                 console.log(JSON.parse(data))
+            }
+        })
+    };
+
+   var xml = new XMLHttpRequest();
+    xml.open('get','https://www.baidu.com/',true);
+    xml.setRequestHeader('Content-Type', 'Access-Control-Allow-Origin:*;application/x-www-form-urlencoded;charset=utf-8' );
+    xml.send(null);
+    xml.onreadystatechange = function(){
+        if(xml.readyState === 4 && xml.status === 200){
+            console.log(xml.response);
+        }
+    }
+</script>
+</html>

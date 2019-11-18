@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        input{
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+http://s.music.qq.com/fcgi-bin/music_search_new_platform?t=0&n=17&aggr=1&cr=1&loginUin=0&format=json&inCharset=GB2312&outCharset=utf-8¬ice=0&platform=jqminiframe.json&needNewCode=0&p=1&catZhida=0&remoteplace=sizer.newclient.next_song&w=周杰伦'
+    <audio controls="controls" autoplay="autoplay">
+        <source src="http://ws.stream.qqmusic.qq.com/213291415.m4a?fromtag=00 " type="audio/mp4" />
+    </audio>
+http://ws.stream.qqmusic.qq.com/’+id+‘.m4a?fromtag=46
+
+
+<div style="width: 100px;height: 100px;border: 1px solid #333;" onclick="console.log('out')">
+    <button onclick="console.log('in')">test</button>
+</div>
+<script>
+    var i = 0;
+    // 定义一个动物类
+    function Animal (name) {
+        i++;
+        // 属性
+        this.name = name || 'Animal';
+        // 实例方法
+        this.sleep = function(){
+            console.log(this.name + '正在睡觉！');
+        }
+    }
+    // 原型方法
+    Animal.prototype.eat = function(food) {
+        console.log(this.name + '正在吃：' + food);
+    };
+    function Cat(name){
+        Animal.call(this);
+        this.name = name || 'Tom';
+    }
+    Cat.prototype = new Animal();
+
+    // Test Code
+    var cat = new Cat();
+    console.log(i);
+
+    var num = 1927;
+    function test(num) {
+    var numS = num + '';
+    var qian = parseInt(numS[0]);
+    var bai = parseInt(numS[1]);
+    var shi = parseInt(numS[2]);
+    var ge = parseInt(numS[3]);
+        if(num+qian+bai+shi+ge == 1927){
+            console.log(num)
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    for(var i = 1000;;i++){
+        if(test(i)){
+            break;
+        }
+    }
+</script>
+</body>
+</html>

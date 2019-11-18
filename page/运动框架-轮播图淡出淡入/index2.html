@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>运动</title>
+    <link rel="stylesheet" href="css/index.css"/>
+    <style>
+
+
+    </style>
+</head>
+<body>
+<ul id="test">
+    <li class="img img1 show"></li>
+    <li class="img img2"></li>
+    <li class="img img3"></li>
+    <li class="img img4"></li>
+    <li class="img img5"></li>
+    <li class="img img6"></li>
+    <li>
+        <ul class="point">
+            <li class="checked"></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </li>
+</ul>
+<script src="js/sports.js"></script>
+<script>
+    var imgs = document.querySelectorAll('.img');
+    var lis = document.querySelectorAll('.point li');
+    var xNum = 50;
+    var yNum = 30;
+    var imgW = imgs[0].offsetWidth;
+    var imgH = imgs[0].offsetHeight;
+    var spanW = imgW / xNum;
+    var spanH = imgH / yNum;
+    var index = 0;
+    var html = '';
+    var isEnd = true;
+    init();
+    function init(){
+        for (var i = 0, length = lis.length; i < length; i++) {
+            (function (i) {
+                lis[i].onclick = function(event) {
+                    if(isEnd){
+                        isEnd = !isEnd;
+                        if (!lis[i].classList.contains('checked')) {
+                            var spansL = imgs[i].querySelectorAll('span');
+                            var spansI = imgs[index].querySelectorAll('span');
+                            var len = spansL.length;
+                            var num = 0;
+                            var arr = Array.apply(null, Array(len)).map(function(item, i) {
+                                return i;
+                            });
+                            arr.sort(function (a,b) {
+                                return 0.5 - Math.random();
+                            });
+
+                            ~function timer () {
+                                for(var k = 0;k<260;k++){
+                                    sports(spansI[arr[num]],'opacity',0,50);
+                                    sports(spansL[arr[num]],'opacity',1,50);
+                                    num++;
+                                    if(num == len){
+                                        isEnd = !isEnd;
+                                        break;
+                                    }
+                                }
+                                if(num != len){
+                                    requestAnimationFrame(timer);
+                                }
+                            }();
+
+                            this.classList.add('checked');
+                            lis[index].classList.remove('checked');
+                            index = i;
+                        }
+                    }
+
+                }
+            })(i)
+        }
+        rendom();
+    }
+    function rendom() {
+        imgs.forEach( function (item, index) {
+            html = '';
+            for (var i = 0; i < yNum; i++) {
+                for (var j = 0; j < xNum; j++) {
+                    html += `<span style="width: ${spanW}px;height:${spanH}px;
+                    background-position: -${j * spanW}px -${i * spanH}px;top:${i * spanH}px;left: ${j * spanW}px;"></span>`
+                }
+            }
+            item.innerHTML = html;
+        });
+
+    }
+
+</script>
+</body>
+</html>

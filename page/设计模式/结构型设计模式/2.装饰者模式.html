@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>装饰者模式</title>
+</head>
+<body>
+让我们的代码便于扩展
+
+便于扩展原有代码的一种方式
+
+特点：不修改之前的功能，只是拓展
+<button id="btn">1234567687</button>
+<script>
+    btn.onclick = function () {
+        this.style.color = "red";
+    }
+    var decorate = function (dom,fn,ev) {
+        //首先先实现点击click事件的装饰/拓展
+        dom.onclick?(ev = dom.onclick,dom.onclick = function () {
+            ev.call(dom);
+            fn.apply(dom);
+        }):(dom.onclick = fn);
+    }
+    decorate(btn,function () {
+        this.style.fontSize = '20px';
+    });
+    decorate(btn,function () {
+        this.style.backgroundColor = 'green';
+    });
+</script>
+</body>
+</html>

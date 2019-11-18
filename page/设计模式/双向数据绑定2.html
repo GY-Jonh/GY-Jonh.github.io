@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    {{name}}
+    <input type="text" v-model="name"><span>{{name}}</span>
+
+    <br/>
+    <input type="text" v-model="age"><span>{{age}}</span>
+
+</div>
+</body>
+<script>
+
+
+    function Dep() {
+        this.subs = {}
+    }
+
+    Dep.prototype.addSub = function (sub,name) {
+      this.subs[name] || (this.subs[name] = []);
+        this.subs[name].push(sub);
+    };
+
+    Dep.prototype.notify = function (name) {
+        this.subs[name].forEach(function (item) {
+            item.update();
+        })
+    };
+
+    function Watch(vm,node,name,type) {
+        Dep.target = this;
+        this.vm = vm;
+        this.node = node;
+        this.name = name;
+        this.type = type;
+        this.update();
+        Dep.target = null;
+    }
+
+    Watch.prototype.update = function () {
+        switch (this.type){
+            case 0:
+                this.node.value = this.vm[this.name];
+                break;
+            case 1:
+                this.node.innerHTML = this.vm[this.name];
+                break;
+            case 2:
+                this.node.nodeValue = this.vm[this.name];
+                break;
+        }
+
+    };
+
+
+    function defineReActive(vm,key,value) {
+        var dep = new Dep();
+        Object.defineProperty(vm,key,{
+            get:function () {
+                Dep.target && dep.addSub(Dep.target,key)
+                return value;
+            },
+            set:function (newVal) {
+                value = newVal;
+                dep.notify(key);
+            }
+        })
+    }
+
+    function observe(data,vm) {
+        for (var key in data){
+            defineReActive(vm,key,data[key]);
+        }
+    }
+
+    function complic(node, vm) {
+        var reg = /\{\{(.*)\}\}/;
+        var name;
+        if (node.nodeType == 1) {
+            if(node.hasAttribute('v-model')){
+                name = node.getAttribute('v-model');
+                node.addEventListener('input',function (e) {
+                    vm[name] = e.target.value;
+                });
+                node.value = vm[name];
+                new Watch(vm,node,name,0);
+            }else if(reg.test(node.innerText)){
+                name = RegExp.$1;
+                node.innerText =  vm[name];
+                new Watch(vm,node,name,1);
+            }
+        }else if(node.nodeType == 3){
+            if(reg.test(node.nodeValue)){
+                name = RegExp.$1;
+                node.nodeValue =  vm[name];
+                new Watch(vm,node,name,2);
+            }
+        }
+    }
+
+    function domToFrag(node, vm) {
+        var frag = document.createDocumentFragment();
+        var child;
+        while (child = node.firstChild) {
+            complic(child, vm);
+            frag.appendChild(child);
+        }
+        return frag;
+    }
+
+    function Vue(option) {
+        this.data = option.data;
+        observe(this.data,this);
+        var app = document.getElementById(option.el);
+        var frag = domToFrag(app, this);
+        app.appendChild(frag);
+    }
+
+    var app = new Vue({
+        el: 'app',
+        data: {
+            age: 22,
+            name: 'GY',
+            test: 'test1'
+        }
+    })
+</script>
+</html>

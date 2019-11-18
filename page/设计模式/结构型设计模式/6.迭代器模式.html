@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>迭代器模式</title>
+</head>
+<body>
+迭代器 循环 递归
+for forin
+
+有些时候默认的for循环满足不了我们的需求
+
+</body>
+<script>
+    var agg = (function () {
+       var  index = 0;
+       var arr = [1,2,3];
+       var length = arr.length;
+       return {
+            next:function () {
+                var item;
+                if(!this.hasNext()){
+                    return null;
+                }
+                item = arr[index];
+                index++;
+                return item;
+            },
+           hasNext:function () {
+               return index < length;
+           }
+       }
+    }());
+    while (agg.hasNext()) {
+        console.log(agg.next());
+        // agg.rewind();
+    }
+</script>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>命令模式</title>
+    <style>
+        .test{
+            width: 200px;
+            height: 200px;
+            padding-left: 10px;
+            paddingright: 20px;
+            padding: 20px 30px 10px;
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+将请求与实现解耦并封装成独立对象 , 从而使不同的请求对客户端
+的实现参数化
+
+命令模式是对一些操作的封装 , 并提供简单高效的api(接口, 使用方式)
+
+大多数的命令在一定程度上是简化操作方法的使用
+<div id="dom">  23232</div>
+<div class="test">
+
+</div>
+</body>
+<script>
+    var commant = {
+        height:function (dom,value) {
+            dom.style.height = parseInt(value) + 'px';
+        },
+        width:function (dom,value) {
+            dom.style.width = parseInt(value) + 'px';
+        },
+        color:function (dom,value) {
+            dom.style.color = value;
+        },
+        set:function (type,dom,value) {
+            this[type](dom,value);
+        }
+    };
+    var dom = document.getElementById('dom');
+    commant.set('color',dom,'red');
+    commant.set('height',dom,'220px');
+    commant.set('width',dom,'300');
+</script>
+</html>

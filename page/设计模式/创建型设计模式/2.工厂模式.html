@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>工厂模式</title>
+</head>
+<body>
+<script>
+    //归类把相同的函数放在一起方便使用
+    function Shop(name) {
+        return new this[name]();
+    }
+    Shop.prototype={
+        shangyi:function(){
+            this.price = 50;
+            this.size = 30;
+        },
+        kuzi:function () {
+            this.price = 150;
+            this.size = 31;
+        },
+        maoyi:function () {
+            this.price = 70;
+            this.size = 32;
+        }
+    };
+    var shangyi = new Shop('shangyi');
+    console.log(shangyi)
+</script>
+</body>
+</html>

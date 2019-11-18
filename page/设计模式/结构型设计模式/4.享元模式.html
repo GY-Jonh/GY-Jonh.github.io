@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>享元模式</title>
+</head>
+<body>
+
+$("div1").click(function () {})
+这2个对象之间有很多东西都是一样的
+$("div2").click(function () {})
+
+// 大量相同的类 对象存在 享元模式就是避免这种情况发生
+<script>
+    var Food = function (name,price,cook) {
+        this.name = name;
+        this.price = price;
+        this.cook = cook;
+    }
+    var foodFactory = (function () {
+       var foodList = {};
+       return {
+           createFood:function (name,price,cook) {
+               var foods = foodList[name];
+               if(foods){
+                   return foods;
+               }else{
+                   var food = new Food(name,price,cook)
+                   foodList[name] = food;
+                   return food;
+               }
+           },
+           foodList:foodList
+       }
+    }());
+
+    var diancan = (function () {
+       var customerList = {};
+       return {
+           addFoot:function (name,price,cook,customer,num) {
+               var foot = foodFactory.createFood(name,price,cook);
+               customerList[customer] = [{
+                   foot:foot,
+                   customer:customer,
+                   num:num
+               }];
+           },
+           updateFoot:function (name,price,cook,customer,num) {
+               var foot = foodFactory.createFood(name,price,cook);
+               customerList[customer].push({
+                   foot:foot,
+                   customer:customer,
+                   num:num
+               });
+           },
+           customerList:customerList
+       }
+    }());
+    diancan.addFoot('牛肉面',20,'gy','1号桌',1);
+    diancan.updateFoot('炒饭',20,'gy','1号桌',3);
+    diancan.addFoot('鸡蛋',20,'gy','2号桌',1);
+    diancan.updateFoot('番茄',20,'gy','2号桌',3);
+    console.log(diancan.customerList);
+</script>
+</body>
+</html>

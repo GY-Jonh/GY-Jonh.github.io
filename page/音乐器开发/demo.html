@@ -1,0 +1,281 @@
+<!doctype html><!--声明文档类型：html-->
+<html lang="en">
+	<head><!--头部-->
+		<meta charset="UTF-8"><!--字符编码:utf-8国际编码-->
+		<meta name="Keywords" content="关键词1,关键词2"><!--关键词-->
+		<meta name="Description" content="描述"><!--描述-->
+		<title>手机音乐播放器开发-玄武老师</title><!--网页标题-->
+		<style>/* css样式 */
+			*{/* 通配符 : 选择到所有的标签元素*/
+				margin:0;/*外边距*/
+				padding:0;/*内边距*/
+			}
+			body{
+				background:#000;
+				margin: auto;
+			}
+			#phone{/* # id选择器*/
+				position:relative;/*相对定位元素: 参考物*/
+				width:322px;/*宽度*/
+				height:640px;/*高度*/
+				/*background:#990033;背景颜色*/
+				margin:50px auto;/*上下为50px 左右自动(居中)*/
+				text-align: center;
+			}
+			.top{/*.class类选择器*/
+				width:322px;
+				height:42px;
+				background:url("images/phone_top.png");
+			}
+			.info{
+				width:322px;
+				height:20px;
+				background:url("images/top.jpg");
+			}
+			h3.songName{
+				display: inline-block;
+				width:320px;
+				height:40px;
+				color:#fff;/*文字的颜色*/
+                text-align: center;
+				line-height:40px;/*行高*/
+				border:1px solid #fff;/*边框: 宽度 类型(实心) 颜色*/
+				border-top:0;/*低版本IE不支持none*/
+				border-bottom:0;
+			}
+			.lrc{
+				width:320px;
+				height:490px;
+				background:url("images/0.jpg") no-repeat 0 0/cover;
+				/*background-size:cover;css3属性  IE也不支持
+					background-position:
+				*/
+				border-left:1px solid #fff;
+				border-right:1px solid #fff;
+				overflow:hidden;/*超出隐藏*/
+			}
+			.lrc p{
+				height:20px;
+				line-height:20px;
+				color:#625959;
+				text-align:center;
+				font-size:14px;/*文本尺寸*/
+				font-weight:bold;/*文本加粗*/
+			}
+			#content{
+				position:relative;
+				top:0px;
+			}
+			.footer{
+				width:322px;
+				height:47px;
+				background:url("images/phone_bottom.png");
+			}
+			#btn{
+				position:absolute;/*绝对定位*/
+				left:140px;/*距离参考物左端的距离*/
+				bottom:50px;/*距离参考物下端的距离*/
+				width:50px;
+				height:50px;
+				background:url("images/normalmusic.svg");
+				background-size:100% 100%;
+			}
+			.rotate{
+				animation:rot 5s linear infinite;/*css3自定义动画:名称 时间  匀速运动 无限重复*/
+			}
+			/*规定动画怎么执行*/
+			@keyframes rot{
+				from{transform:rotate(0deg);/*css3变换 : 旋转*/}
+				to{transform:rotate(360deg)}
+			}
+		@-webkit-keyframes   rot{
+			from{transform:rotate(0deg);/*css3变换 : 旋转*/}
+			to{transform:rotate(360deg)}
+		}
+		@-khtml-keyframes   rot{
+			from{transform:rotate(0deg);/*css3变换 : 旋转*/}
+			to{transform:rotate(360deg)}
+		}
+		@-moz-keyframes   rot{
+			from{transform:rotate(0deg);/*css3变换 : 旋转*/}
+			to{transform:rotate(360deg)}
+		}
+		@-ms-keyframes   rot{
+			from{transform:rotate(0deg);/*css3变换 : 旋转*/}
+			to{transform:rotate(360deg)}
+		}
+		@-o-keyframes   rot{
+			from{transform:rotate(0deg);/*css3变换 : 旋转*/}
+			to{transform:rotate(360deg)}
+		}
+
+		</style>
+	</head>
+	<body><!--身体-->
+		<!--div盒子模型标签: 宽度 高度 位置(css样式)-->
+		<div id="phone"><!--id="自定义的名称" 唯一的(身份证) 命名规范(见名知意:用有语义的英文单词)-->
+			<!--class类名  可重复的(姓名)-->
+			<div class="top"></div>
+			<div class="info"></div>
+			<h3 class="songName">刚好遇见你1</h3>
+			<div class="lrc">
+				<div id="content"></div>
+			</div>
+			<div class="footer"></div>
+			<div id="btn" class=""></div>
+		</div>
+		<!--Html5 音频标签-->
+		<audio src="music/李玉刚-刚好遇见你.mp3" id="myMusic"></audio>
+		<textarea id="text">
+			[00:00.95]刚好遇见你 - 李玉刚
+			[00:02.74]作词：高进
+			[00:03.70]作曲：高进
+			[00:04.75]编曲：关天天
+			[00:12.56]我们哭了
+			[00:15.27]我们笑着
+			[00:18.60]我们抬头望天空
+			[00:21.43]星星还亮着几颗
+			[00:24.63]我们唱着
+			[00:27.56]时间的歌
+			[00:30.62]才懂得相互拥抱
+			[00:34.00]到底是为了什么
+			[00:36.94]因为我刚好遇见你
+			[00:40.32]留下足迹才美丽
+			[00:43.69]风吹花落泪如雨
+			[00:46.48]因为不想分离
+			[00:49.57]因为刚好遇见你
+			[00:52.59]留下十年的期许
+			[00:55.69]如果再相遇
+			[00:59.15]我想我会记得你
+			[01:14.28]我们哭了
+			[01:16.88]我们笑着
+			[01:20.29]我们抬头望天空
+			[01:22.96]星星还亮着几颗
+			[01:26.11]我们唱着
+			[01:29.11]时间的歌
+			[01:32.56]才懂得相互拥抱
+			[01:35.36]到底是为了什么
+			[01:38.47]因为我刚好遇见你
+			[01:41.84]留下足迹才美丽
+			[01:44.83]风吹花落泪如雨
+			[01:47.97]因为不想分离
+			[01:51.02]因为刚好遇见你
+			[01:54.09]留下十年的期许
+			[01:57.23]如果再相遇
+			[02:00.69]我想我会记得你
+			[02:03.69]因为刚好遇见你
+			[02:06.43]留下足迹才美丽
+			[02:09.57]风吹花落泪如雨
+			[02:12.64]因为不想分离
+			[02:15.76]因为刚好遇见你
+			[02:18.78]留下十年的期许
+			[02:21.83]如果再相遇
+			[02:24.98]我想我会记得你
+			[02:31.07]因为我刚好遇见你
+			[02:34.13]留下足迹才美丽
+			[02:37.25]风吹花落泪如雨
+			[02:40.37]因为不想分离
+			[02:43.43]因为刚好遇见你
+			[02:46.48]留下十年的期许
+			[02:49.58]如果再相遇
+			[02:52.67]我想我会记得你
+		</textarea>
+		<script type="text/javascript">
+			/*
+				var myMusic  自定义一个变量 myMusic 来存储 audio标签元素
+			
+				在document文档下面By通过Id名获取get元素Element
+				document.getElementById("myMusic")
+			*/
+			var myMusic = document.getElementById("myMusic");
+			var btn = document.getElementById("btn");
+			var txt = document.getElementById("text");
+			var con = document.getElementById("content");
+			//点击按钮实现什么功能
+			var onOff = true;//做一个开关来记录播放的状态
+			btn.onclick = function(){
+				if (onOff)//如果onOff为真 就执行里面的代码
+				{
+					myMusic.play();//播放音乐
+					this.className = "rotate";
+					onOff = false;
+				}else{
+					myMusic.pause();//暂停播放
+					this.className = "";
+					onOff = true;
+				}
+			} 
+
+			var html = '';//定义一个空变量来存储歌词
+			//获取歌词
+			//console.log(txt.value)//在控制台输出
+			//获取歌词并从[切割开
+			var lrc = txt.value.split("[");
+			console.log(lrc)
+			//console.log(lrc)
+			//循环遍历到每句歌词
+			for (var i=0;i<lrc.length ; i++)
+			{
+				//console.log(lrc[i])
+				//从语句里面的]这里切割开
+				var arr = lrc[i].split("]");
+				//console.log(arr[0])
+				var times = arr[0].split(".");
+				//console.log(times[0])
+				var time = times[0].split(":");
+				//console.log(time)
+				var ct = time[0]*60 + time[1]*1;
+				//console.log(ct)
+				//判断是否存在歌词
+				if (arr[1])
+				{
+					html += "<p id="+ct+">"+arr[1]+"</p>"
+				}
+			}
+			//console.log(html)
+			con.innerHTML = html;//把歌词内容添加到歌词盒子里面
+			
+			var aP = document.getElementsByTagName("p");
+			var n = 0;
+			//歌词同步
+			//监听歌曲播放的进度
+			myMusic.addEventListener("timeupdate",function(){
+				//输出当前播放的时间
+				//console.log(parseInt(this.currentTime))
+				var cur = parseInt(this.currentTime);
+				if(document.getElementById(cur)){
+					//先把所有的p颜色改为原来的
+					for (var i=0;i<aP.length ;i++ )
+					{
+						aP[i].style.color = "#625959";
+						aP[i].style.fontSize = "14px";
+					}
+					//把当前对应上的p改为红色
+					document.getElementById(cur).style.color = "red";
+					document.getElementById(cur).style.fontSize = "18px";
+					//console.log(cur)
+					if (aP[n+11].id == cur)
+					{
+						con.style.top = -20*n +"px";
+						n++;//n = n + 1
+					}
+					
+				}
+			});
+			//监听歌曲是否播放完成
+			myMusic.addEventListener("ended",function(){
+				btn.className = "";//按钮停止动画
+				onOff = true;//把开关更改为初始状态
+				con.style.top = 0;//把歌词改回初始状态
+				n = 0;//把歌词同步需要的n变量也改回初始状态
+				this.currentTime = 0;//把当前歌曲的进度改回初始状态
+				//this.play()单曲循环
+				/*
+					如果是多首歌??
+					1 更改audio标签的src路径
+					2 播放
+				*/
+			});
+		</script>
+	</body>
+</html>

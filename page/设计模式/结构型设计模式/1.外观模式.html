@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+为一组接口提供一个一致的界面, 更高级的接口
+方便我们使用
+
+应该我们按照原本的思路把代码写出来 然后 再慢慢的改进
+<button id="btn">按钮</button>
+<script>
+    function addEvent(dom, ev, fn) {
+        if(dom.addEventListener){
+            dom.addEventListener(ev,fn,false);
+        }else if(dom.attachEvent){
+            dom.attachEvent('on'+ev,fn);
+        }else{
+            el["on" + ev] = fn;
+        }
+    }
+    addEvent(btn,'click',function () {
+        console.log('222')
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>弹簧</title>
+    <style>
+        html, body {
+            position: relative;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            perspective: 2000px;
+        }
+
+        div {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+        }
+
+        .outside {
+            transform-style: preserve-3d;
+            transform: rotateX(60deg);
+        }
+
+        .first {
+            width: 400px;
+            height: 400px;
+            animation: run1 2s infinite 1.2s alternate;
+        }
+
+        .second {
+            width: 300px;
+            height: 300px;
+            animation: run1 2s infinite .9s alternate;
+        }
+
+        .third {
+            width: 200px;
+            height: 200px;
+            animation: run1 2s infinite .6s alternate;
+        }
+
+        .fourth {
+            width: 100px;
+            height: 100px;
+            animation: run1 2s infinite .3s alternate;
+        }
+
+        .fifth {
+            width: 30px;
+            height: 30px;
+            animation: run1  2s infinite 0s alternate;
+        }
+
+        .out-div {
+            border: 20px solid red;
+            border-radius: 50%;
+            box-shadow: 0 1px 0 0 #333333,0 1px 0 0 #333333 inset,0 12px 0 0 #333333;
+            background-color: rgba(0,0,0,0);
+            transform: translateZ(-50px);
+        }
+
+        @keyframes common {
+            from{
+                background-color: red;
+            }
+            to{
+                background-color: violet;
+            }
+        }
+        /*red, orange, yellow, green, blue, indigo, violet*/
+       @keyframes run1 {
+           0% {
+               transform: translateZ(-50px);
+               border:20px solid red;
+           }
+           15%{
+               border:20px solid orange;
+           }
+           30%{
+                border:20px solid yellow;
+            }
+           45%{
+               border:20px solid green;
+           }
+           60%{
+                border:20px solid blue;
+            }
+           75%{
+               border:20px solid indigo;
+           }
+           100% {
+               transform: translateZ(100px);
+               border:20px solid violet;
+           }
+        }
+
+        @keyframes run2 {
+            0% {
+                transform: translateZ(-50px);
+                border:20px solid red;
+            }
+            100% {
+                transform: translateZ(100px);
+                border:20px solid indigo;
+            }
+        }
+
+        @keyframes run3 {
+            0% {
+                transform: translateZ(-50px);
+                border:20px solid red;
+            }
+            100% {
+                transform: translateZ(100px);
+                border:20px solid indigo;
+            }
+        }
+
+        @keyframes run4 {
+            0% {
+                transform: translateZ(-50px);
+                border:20px solid red;
+            }
+            100% {
+                transform: translateZ(100px);
+                border:20px solid indigo;
+            }
+        }
+
+        @keyframes run5 {
+            0% {
+                transform: translateZ(-50px);
+                border:20px solid red;
+            }
+            100% {
+                transform: translateZ(100px);
+                border:20px solid indigo;
+            }
+        }
+
+    </style>
+</head>
+<body>
+<div class="outside">
+
+    <div class="first out-div">
+
+    </div>
+    <div class="second out-div">
+
+    </div>
+    <div class="third out-div">
+
+    </div>
+    <div class="fourth out-div">
+
+    </div>
+    <div class="fifth out-div"></div>
+</div>
+
+</body>
+</html>

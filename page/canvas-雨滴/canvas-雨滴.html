@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="Generator" content="EditPlus®">
+    <meta name="Author" content="">
+    <meta name="Keywords" content="">
+    <meta name="Description" content="">
+    <title>canvas-雨滴</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        canvas {
+            display: block;
+            background-color: #000;
+        }
+    </style>
+</head>
+<body>
+<canvas id="demo"></canvas>
+<div style="position: absolute;left: 0;top: 0;">
+    <button class="button-balanced" id="save">save</button>
+    <br/>
+    <a style="position: absolute;left: 0;top: 0;" href="" download="canvas_love.png" id="save_href">
+        <img src="" id="save_img" style="display: none;"/>
+    </a>
+    <dialog  open>
+        ssss
+    </dialog>
+</div>
+</body>
+<script>
+    window.requestAnimFrame = (function () {
+        return window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                window.oRequestAnimationFrame ||
+                window.msRequestAnimationFrame ||
+                function (callback) {
+                    window.setTimeout(callback, 1000 / 60);
+                }
+    })();
+
+
+    var canvas = document.getElementById('demo');
+        var w = canvas.width = window.innerWidth,
+        h = canvas.height = window.innerHeight;
+        var ctx = canvas.getContext("2d");
+    window.onresize = function () {
+        w = canvas.width = window.innerWidth,
+        h = canvas.height = window.innerHeight;
+    };
+
+    function cans() {};
+
+    cans.prototype = {
+        init: function () {//初始化雨滴
+            this.x = random(0, w),
+                    this.y = 0,
+                    this.vy = random(4, 5),
+                    this.l = random(h * 0.8, h * 0.9),
+                    this.r = 1,
+                    this.vr = 1,
+                    this.o = 1,
+                    this.vo = 0.96;
+        },
+        raining: function () {
+            if (this.y < this.l) {
+                ctx.fillStyle = "#33ffff";
+                ctx.fillRect(this.x, this.y, 2, 5);
+            } else {
+                ctx.strokeStyle = "rgba(51,255,255," + this.o + ")";
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI, false);
+                ctx.stroke();
+            }
+            this.updateState();
+        },
+
+        updateState: function () {
+            if (this.y < this.l) {
+                this.y += this.vy;
+            } else {
+                if (this.o > 0.05) {
+                    this.r += this.vr;
+                    if (this.r > 50) {
+                        this.o *= this.vo;
+                    }
+                } else {
+
+                    this.init();
+                }
+            }
+        }
+    };
+
+    var drops = [];
+    var cansNum = 30;
+    for (var i = 0; i < cansNum; i++) {
+        setTimeout(function () {
+            var can = new cans();
+            can.init();
+            drops.push(can);
+        }, 200 * i)
+
+    }
+
+
+    /*setInterval(function(){
+     ctx.fillStyle = "rgba(0,0,0,0.05)";
+     ctx.fillRect(0,0,w,h);
+     for(var i = 0;i < drops.length; i++){
+     drops[i].raining();
+     }
+     },1000/60);*/
+
+    function move() {
+        ctx.fillStyle = "rgba(0,0,0,0.1)";
+        ctx.fillRect(0, 0, w, h);
+        for (var i = 0; i < drops.length; i++) {
+            drops[i].raining();
+        }
+        requestAnimFrame(move);
+    }
+    move();
+
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+
+    var butSave = document.getElementById("save");
+    butSave.onclick = function () {
+        var svaeHref = document.getElementById("save_href");
+        /*
+         * 传入对应想要保存的图片格式的mime类型
+         * 常见：image/png，image/gif,image/jpg,image/jpeg
+         */
+        var img = document.getElementById("save_img");
+        var tempSrc = canvas.toDataURL("image/gif");
+        svaeHref.href = tempSrc;
+        img.src = tempSrc;
+        img.style.display = 'block';
+    };
+
+
+    document.addEventListener('click',function(e){
+                if(e.target.className == 'xx'){
+                    e.target.removeEventListener();
+                }
+    })
+</script>
+</html>

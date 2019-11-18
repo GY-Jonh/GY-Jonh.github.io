@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="Generator" content="EditPlus®">
+    <meta name="Author" content="">
+    <meta name="Keywords" content="">
+    <meta name="Description" content="">
+    <title>canvas粒子喷射</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            overflow: hidden;
+        }
+
+        #demo {
+
+            background-color: #000;
+
+        }
+    </style>
+</head>
+<body>
+<canvas id="demo"></canvas>
+</body>
+<script>
+    var canvas = {
+        isconlog: true,
+        init: function () {
+            this.log(this,this.isconlog)
+            var c = document.getElementById('demo');
+            this.cw = window.innerWidth;
+            this.ch = window.innerHeight;
+            c.width = this.cw;
+            c.height = this.ch;
+            this.cxt = c.getContext('2d');
+            this.partical = [];
+            this.letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            var timer = ()=> {
+                this.render();
+                setTimeout(timer, 30);
+            };
+            timer();
+
+        },
+        render: function () {
+            var word = {
+                x: this.cw / 2,
+                y: this.ch,
+                letter: this.letters[Math.floor(Math.random() * this.letters.length)],
+                xspeed: (Math.random() * 10) - 5,
+                yspeed: (Math.random() * 10) - 5
+            };
+            this.partical.push(word);
+            this.drawparticals();
+        },
+
+        drawparticals: function () {
+            this.cleanCanvas();
+            var parLen = this.partical.length;
+            for (var i = 0; i < parLen; i++) {
+                var charact = this.partical[i];
+                this.cxt.fillStyle = 'red';
+                this.cxt.font = '18px Arial';
+                this.cxt.fillText(charact.letter, charact.x, charact.y);
+                charact.x += charact.xspeed;
+                charact.y += charact.yspeed;
+                charact.y *= 0.98;
+            }
+        },
+        cleanCanvas: function () {
+            this.cxt.fillStyle = "rgba(0,0,0,1)";
+            this.cxt.fillRect(0, 0, this.cw, this.ch);
+        },
+        log: function () {
+            if (this.isconlog) {
+                console.log(arguments)
+            }
+        }
+
+    }
+    canvas.init();
+</script>
+</html>

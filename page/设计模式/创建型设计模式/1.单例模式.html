@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>单例模式</title>
+</head>
+<body>
+<script>
+    //单例模式——解决了全局命名空间污染 冲突;好处只能访问不能修改
+    var demo = (function(){
+        var obj = {
+            a:'1',
+            b:'2',
+            fn:function(){
+                console.log('这里是单例里面的方法');
+            }
+        };
+        return {
+            getData:function (key) {
+                return obj[key] && obj[key];
+            }
+        }
+    })();
+    console.log(demo.getData('a'));
+</script>
+</body>
+</html>

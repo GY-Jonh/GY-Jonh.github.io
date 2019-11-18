@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>原型模式</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #app {
+            margin: 0 auto;
+            width: 200px;
+            overflow: hidden;
+        }
+        ul {
+            width: 20000px;
+            position: relative;
+        }
+        li{
+            width: 200px;
+            float: left;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <ul>
+        <li style="background: #000;">11111</li>
+        <li style="background: green;">222222</li>
+        <li style="background: red;">333333</li>
+        <li  style="background: gold;">444444</li>
+    </ul>
+</div>
+<script>
+    // 原型模式 构造函数 减少代码量 简单的说就是原型继承
+    function Banner(dom) {
+        // dom = div#app
+        this.dom = dom;
+        this.init();
+    }
+    Banner.prototype.init = function () {
+        console.log(' 这里是init');
+        var ulDom = this.dom.getElementsByTagName("ul")[0];
+        var liDom = ulDom.getElementsByTagName("li")[0];
+        setInterval(function () {
+            ulDom.style.right =
+                ulDom.style.right === "600px" && "0px" ||
+                parseInt(ulDom.style.right || 0) + 200 + "px";
+        },1000)
+    };
+
+    function fn() {
+
+    }
+    fn.prototype = Banner.prototype;
+
+    function Banner2(dom) {
+        Banner.call(this,dom);
+        this.goudan();
+    }
+    Banner2.prototype = new fn();
+    Banner2.prototype.goudan = function () {
+        console.log('这里是goudan');
+    };
+     new Banner2(app);
+</script>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .out-div {
+            width: 80%;
+            margin: auto;
+            border: 1px solid #eeeeee;
+        }
+
+        header {
+            line-height: 40px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            color: #999999;
+            border-bottom: 2px solid #999999;
+        }
+
+        section {
+            padding: 10px;
+            overflow: hidden;
+        }
+
+        #box {
+            height: 200px;
+            line-height: 200px;
+            text-align: center;
+            color: #666666;
+            background-color: #D0D0D0;
+        }
+
+        .btn-section {
+            position: relative;
+        }
+
+        .btn-span {
+            float: left;
+            margin-right: 15px;
+            padding: 5px 15px;
+            font-size: 16px;
+            color: #ffffff;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .select-btn {
+            background-color: #9F9F9F;
+        }
+
+        .upload-btn {
+            background-color: #6BC30D;
+        }
+
+        .content {
+            cursor: auto;
+            color: #000000;
+        }
+
+        .img-list {
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            min-height: 200px;
+            border: 1px solid #cccccc;
+        }
+
+        .img-list .img-div {
+            position: relative;
+            margin: 10px;
+        }
+
+        .img-list img {
+            width: 150px;
+        }
+
+        .img-list p{
+            text-align: center;
+        }
+
+        .delete {
+            display: none;
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            border-radius: 50%;
+            color: #ffffff;
+            background-color: red;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .img-list .img-div:hover .delete {
+            display: inline-block;
+        }
+
+        .cls-btn{
+            float: right;
+            background-color: #6BC30D;
+        }
+
+    </style>
+</head>
+<body>
+<div class="out-div"  id="out-div">
+    <header>
+        图片拖拽上传示例
+    </header>
+    <section>
+        <div id="box">
+            请将图片拖拽到这个区域
+        </div>
+    </section>
+    <section class="btn-section">
+        <label for="select-img" class="btn-span select-btn">选择图片</label>
+        <input id="select-img" hidden type="file" multiple accept="image/png, image/jpeg, image/gif, image/jpg">
+        <label class="btn-span upload-btn">开始上传</label>
+        <span class="btn-span content"></span>
+        <label class="btn-span cls-btn">清空</label>
+    </section>
+    <section class="img-list">
+    </section>
+</div>
+</body>
+<script>
+
+
+
+    var box = document.querySelector('#box');
+    var content = document.querySelector('.content');
+    var imgList = document.querySelector('.img-list');
+    var seleImg = document.querySelector('#select-img');
+    var clsBtn = document.querySelector('.cls-btn');
+    var sizesArr = [];
+
+
+    clsBtn.onclick = function (e) {
+        sizesArr = [];
+        getImglist(sizesArr);
+        setInfo();
+    };
+    box.ondragover = function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    };
+
+    box.ondrop = function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var files = e.dataTransfer.files;
+        getInfo(files);
+    };
+
+    seleImg.onchange = function () {
+        var files = this.files;
+        getInfo(files);
+    };
+
+    function getImglist(obj) {
+        var fram = document.createDocumentFragment();
+        var len = obj.length;
+        var k = 0;
+        if(len>0){
+            createDom();
+            function createDom() {
+                var file = obj[k];
+                k++;
+                if (/image/.test(file.type)) {
+
+                    var b = new Blob([file], {type: 'image/*'});
+                    var url = window.URL.createObjectURL(b);
+                    var img = new Image();
+                    img.src = url;
+                    var div = document.createElement('div');
+                    div.className = 'img-div';
+                    var p = document.createElement('p');
+                    p.innerHTML = file.name;
+                    var span = document.createElement('span');
+                    span.className = 'delete';
+                    span.innerHTML = 'X';
+                    span.k = k - 1;
+                    span.onclick = function () {
+                        this.parentNode.parentNode.removeChild(this.parentNode);
+                        sizesArr.splice(this.k,1);
+                        seleImg.value = '';
+                        setInfo();
+                        var spans = document.querySelectorAll('.delete');
+                        for(var i = 0;i<spans.length;i++){
+                            spans[i].k = i;
+                        }
+                    };
+
+                    img.onload = function () { console.log(222);
+                        div.appendChild(span);
+                        div.appendChild(img);
+                        div.appendChild(p);
+                        fram.appendChild(div);
+                        if (k === len) {
+                            imgList.appendChild(fram)
+                        } else {
+                            createDom();
+                        }
+                    };
+                }
+            }
+
+    }
+
+    function getInfo(obj) {
+        var len = obj.length;
+        for (var i = 0; i < len; i++) {
+            if(!sizesArr.some(function (j) {
+                    return j.name === obj[i].name && j.size === obj[i].size ;
+                })){
+                sizesArr.push(obj[i]);
+                getImglist([obj[i]]);
+            }
+        }
+        setInfo();
+    }
+
+    function setInfo() {
+        var size = 0;
+        var len = sizesArr.length;
+        sizesArr.forEach(function (item,index) {
+            size += item.size;
+        });
+        size = (size / 1024 / 1024).toFixed(3);
+        content.innerHTML = "已选择" + len + "张图片，总共" + size + "M"
+    }
+
+</script>
+</html>

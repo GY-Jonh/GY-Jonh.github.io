@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>拖拽替换功能</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .out-div {
+            margin: 50px auto;
+            border: 1px solid #ccc;
+        }
+
+        ul, ul * {
+            list-style: none;
+            box-sizing: border-box;
+        }
+
+        ul {
+            position: relative;
+            height: 100%;
+        }
+
+        li {
+            position: absolute;
+            width: 300px;
+            padding: 5px;
+
+        }
+
+        li img {
+            display: block;
+            width: 100%;
+            border-radius: 30px;
+        }
+    </style>
+</head>
+<body>
+<div class="out-div menu-out-div">
+    <ul class='clear'>
+        <li class="menu"><img src="images/1.png" alt=""></li>
+        <li class="menu"><img src="images/2.png" alt=""></li>
+        <li class="menu"><img src="images/3.png" alt=""></li>
+        <li class="menu"><img src="images/4.png" alt=""></li>
+        <li class="menu"><img src="images/5.png" alt=""></li>
+        <li class="menu"><img src="images/6.png" alt=""></li>
+        <li class="menu"><img src="images/7.png" alt=""></li>
+        <li class="menu"><img src="images/8.png" alt=""></li>
+        <li class="menu"><img src="images/9.png" alt=""></li>
+    </ul>
+</div>
+<script>
+
+
+    /*  var Menu = {
+          outDiv: null,
+          ul: null,
+          lis: null,
+          lisArr: {},
+          zIndex: 2,
+          last_dom: null,
+          liWidth: document.querySelector('.menu-out-div').querySelector('ul').querySelectorAll('.menu')[0].offsetWidth,
+          liHeight: document.querySelector('.menu-out-div').querySelector('ul').querySelectorAll('.menu')[0].offsetHeight,
+          init: function () {
+              var _this = this;
+              this.outDiv = document.querySelector('.menu-out-div');
+              this.ul = this.outDiv.querySelector('ul');
+              this.lis = this.ul.querySelectorAll('.menu');
+              var img = this.lis[0].querySelector('img');
+              var foo = async function (img) {
+                  if (img.complete) {
+                      _this.liWidth = _this.lis[0].offsetWidth;
+                      _this.liHeight = _this.lis[0].offsetHeight;
+                  }
+              }.bind(this);
+              foo(img).then(function(){
+                  _this.resetDom();
+              });
+
+
+          },
+          resetDom: function () {
+              for (var i = 0, len = this.lis.length; i < len; i++) {
+                  var obj = {};
+                  var li = this.lis[i];
+                  obj.left = i % 3 * this.liWidth;
+                  obj.top = ~~(i / 3) * this.liHeight;
+                  li.style.width = this.liWidth + 'px';
+                  li.style.left = obj.left + 'px';
+                  li.style.top = obj.top + 'px';
+                  this.lisArr[i] = obj;
+              }
+
+              this.outDiv.style.height = this.liHeight * 3 + 'px';
+              this.outDiv.style.width = this.liWidth * 3 + 'px';
+              this.dragLi();
+          },
+          dragLi: function () {
+              var menu = this;
+              for (var i = 0, len = this.lis.length; i < len; i++) {
+                  var li = this.lis[i];
+                  li.index = i;
+                  li.onmousedown = function (event) {
+                      var _this = this;
+                      var oldX = event.clientX;//鼠标按下的坐标X
+                      var oldY = event.clientY;//鼠标按下的坐标Y
+                      var oldLiX = _this.offsetLeft;//当前li的左位置
+                      var oldLiY = _this.offsetTop;//当前li的Top位置
+                      var ulLeft = menu.ul.offsetLeft;
+                      var ulTop = menu.ul.offsetTop;
+                      document.onmousemove = function (ev) {
+                          var newX = ev.clientX;
+                          var newY = ev.clientY;
+                          var offX = newX - oldX;
+                          var offY = newY - oldY;
+                          var offLiX = oldLiX + offX;
+                          var offLiY = oldLiY + offY;
+                          _this.style.cssText = `left:${offLiX}px;top:${offLiY}px;z-index:${menu.zIndex};`;
+                          oldX = newX;
+                          oldY = newY;
+                          oldLiX = offLiX;
+                          oldLiY = offLiY;
+                          menu.scaleLi(ev, ulTop, ulLeft, _this);//底下目标变大
+                      };
+                      document.onmouseup = function (evt) {
+                          document.onmousemove = '';
+                          menu.changeDom(evt, ulTop, ulLeft, _this);//互换位置或者回到原位
+                      };
+                      return false;
+                  };
+              }
+          },
+          scaleLi: function (ev, ulTop, ulLeft, _this) {
+              var downIndex = this.getIndex(ev, ulTop, ulLeft, _this);//当前底下的目标的下标
+              if (this.last_dom && this.last_dom != downIndex) {
+                  this.lis[this.last_dom].style.transform = '';
+                  this.lis[this.last_dom].style.transition = '';
+              }
+              if (downIndex) {
+                  this.lis[downIndex].style.transition = 'all .1s';
+                  this.lis[downIndex].style.transform = 'scale(1.06)';
+                  this.last_dom = downIndex;
+              }
+          },
+          getIndex: function (evt, ulTop, ulLeft, dom) {
+              var mouseLeft = evt.clientX + document.body.scrollLeft - document.body.clientLeft - ulLeft;
+              var mouseTop = evt.clientY + document.body.scrollTop - document.body.clientTop - ulTop;
+              for (let i in this.lisArr) {
+                  var left = this.lisArr[i].left;
+                  var top = this.lisArr[i].top;
+                  if (mouseLeft - left <= this.liWidth && mouseLeft - left > 0 && mouseTop - top <= this.liHeight && mouseTop - top > 0 && dom.index != i) {
+                      return i;
+                  }
+              }
+          },
+          changeDom: function (evt, ulTop, ulLeft, dom) {
+              var this_index = dom.index;
+              var i = this.getIndex(evt, ulTop, ulLeft, dom);
+              if (i) {
+                  [this.lisArr[i],this.lisArr[this_index]] = [this.lisArr[this_index], this.lisArr[i]];
+                  this.lis[i].style.cssText = `left:${this.lisArr[i].left}px;top:${this.lisArr[i].top}px;transition :all .5s;z-index:${this.zIndex - 1};`;
+              }
+              this.lis[this_index].style.cssText = `left:${this.lisArr[this_index].left}px;top:${this.lisArr[this_index].top}px;transition :all .5s;z-index:${this.zIndex}`;
+              this.zIndex++;
+          }
+      };
+      window.onload = function(){
+          Menu.init();
+      }*/
+
+
+    function Menus(obj) {
+        this.outDiv = document.querySelector(obj.el);
+        this.ul = this.outDiv.querySelector('ul');
+        this.lis = this.ul.querySelectorAll('.menu');
+        this.lisArr = {};//存储所有的单位对象的位置key是代码顺序，value是位置{top,left}
+        this.zIndex = 2;//被拖动的单位的层级级别z-index
+        this.last_dom;//上一次底下的目标的下标
+        this.el = obj.el ? obj.el : "";
+        this.liWidth = 0;//一个单位的宽度
+        this.liHeight = 0;//一个单位的高度
+    }
+
+    Menus.prototype.init = function () {
+        var img = this.lis[0].querySelector('img');
+
+        function imgLoad(img, callback) {
+            var timer = setInterval(function () {
+                console.log(1);
+                if (img.complete) {
+                    callback(img)
+                    clearInterval(timer)
+                }
+            }, 1000 / 60);
+        }
+
+        imgLoad(img, function () {
+            this.liWidth = this.lis[0].offsetWidth;
+            this.liHeight = this.lis[0].offsetHeight;
+            this.resetDom();
+        }.bind(this));
+        console.log(2);
+        /* var foo = async function () {
+             if(!img.complete) {
+                 foo();
+                 return;
+             };
+             this.liWidth = await this.lis[0].offsetWidth;
+             this.liHeight = await this.lis[0].offsetHeight;
+             return true;
+         }.bind(this);
+         foo().then(function(isLoad){
+             console.log(isLoad)
+             if(isLoad)
+             this.resetDom();
+         }.bind(this));*/
+    };
+    Menus.prototype.resetDom = function () {
+
+        for (var i = 0, len = this.lis.length; i < len; i++) {
+            var obj = {};
+            var li = this.lis[i];
+            obj.left = i % 3 * this.liWidth;
+            obj.top = ~~(i / 3) * this.liHeight;
+            li.style.width = this.liWidth + 'px';
+            li.style.left = obj.left + 'px';
+            li.style.top = obj.top + 'px';
+            this.lisArr[i] = obj;
+        }
+        this.outDiv.style.height = this.lis[0].offsetHeight * 3 + 'px';
+        this.outDiv.style.width = this.lis[0].offsetWidth * 3 + 'px';
+        this.dragLi();
+    };
+    Menus.prototype.dragLi = function () {
+        var menu = this;
+        for (var i = 0, len = this.lis.length; i < len; i++) {
+            var li = this.lis[i];
+            li.index = i;
+            li.onmousedown = function (event) {
+                var _this = this;
+                var oldX = event.clientX;//鼠标按下的坐标X
+                var oldY = event.clientY;//鼠标按下的坐标Y
+                var oldLiX = _this.offsetLeft;//当前li的左位置
+                var oldLiY = _this.offsetTop;//当前li的Top位置
+                var ulLeft = menu.ul.offsetLeft;
+                var ulTop = menu.ul.offsetTop;
+                document.onmousemove = function (ev) {
+                    var newX = ev.clientX;
+                    var newY = ev.clientY;
+                    var offX = newX - oldX;
+                    var offY = newY - oldY;
+                    var offLiX = oldLiX + offX;
+                    var offLiY = oldLiY + offY;
+                    _this.style.cssText = `left:${offLiX}px;top:${offLiY}px;z-index:${menu.zIndex};`;
+                    oldX = newX;
+                    oldY = newY;
+                    oldLiX = offLiX;
+                    oldLiY = offLiY;
+                    menu.scaleLi(ev, ulTop, ulLeft, _this);//底下目标变大
+                };
+                document.onmouseup = function (evt) {
+                    document.onmousemove = null;
+                    document.onmouseup = null;
+                    menu.changeDom(evt, ulTop, ulLeft, _this);//互换位置或者回到原位
+                };
+                return false;
+            };
+        }
+    };
+    Menus.prototype.scaleLi = function (ev, ulTop, ulLeft, _this) {
+        var downIndex = this.getIndex(ev, ulTop, ulLeft, _this);//当前底下的目标的下标
+        if (this.last_dom && this.last_dom != downIndex) {
+            this.lis[this.last_dom].style.transform = '';
+            this.lis[this.last_dom].style.transition = '';
+        }
+        if (downIndex) {
+            this.lis[downIndex].style.transition = 'all .1s';
+            this.lis[downIndex].style.transform = 'scale(1.06)';
+            this.last_dom = downIndex;
+        }
+    };
+
+    Menus.prototype.getIndex = function (evt, ulTop, ulLeft, dom) {
+        var mouseLeft = evt.clientX + document.body.scrollLeft - document.body.clientLeft - ulLeft;
+        var mouseTop = evt.clientY + document.body.scrollTop - document.body.clientTop - ulTop;
+        for (let i in this.lisArr) {
+            var left = this.lisArr[i].left;
+            var top = this.lisArr[i].top;
+            if (mouseLeft - left <= this.liWidth && mouseLeft - left > 0 && mouseTop - top <= this.liHeight && mouseTop - top > 0 && dom.index != i) {
+                return i;
+            }
+        }
+    };
+    Menus.prototype.changeDom = function (evt, ulTop, ulLeft, dom) {
+        var this_index = dom.index;
+        var i = this.getIndex(evt, ulTop, ulLeft, dom);
+        if (i) {
+            [this.lisArr[i], this.lisArr[this_index]] = [this.lisArr[this_index], this.lisArr[i]];
+            this.lis[i].style.cssText = `left:${this.lisArr[i].left}px;top:${this.lisArr[i].top}px;transition :all .5s;z-index:${this.zIndex - 1};`;
+        }
+        this.lis[this_index].style.cssText = `left:${this.lisArr[this_index].left}px;top:${this.lisArr[this_index].top}px;transition :all .5s;z-index:${this.zIndex}`;
+        this.zIndex++;
+    };
+    var menu = new Menus({
+        el: '.menu-out-div'
+    });
+    menu.init();
+
+
+    /*   var outDiv = document.querySelector('.menu-out-div');
+     var ul = outDiv.querySelector('ul');
+     var lis = ul.querySelectorAll('.menu');
+     var lisArr = {};//存储所有的单位对象的位置key是代码顺序，value是位置{top,left}
+     var zIndex = 2;//被拖动的单位的层级级别z-index
+     var liWidth = 200;//一个单位的宽度
+     var liHeight = 125.02;//一个单位的高度
+     var last_dom;//上一次底下的目标的下标
+
+     window.onload = function () {
+     resetDom();
+     dragLi();
+     outDiv.style.height = lis[0].offsetHeight * 3 + 'px';
+     outDiv.style.width = lis[0].offsetWidth * 3 + 'px';
+     };
+
+
+     /!**
+     *拖动节点移动、释放替换
+     *!/
+     function dragLi() {
+     for (var i = 0, len = lis.length; i < len; i++) {
+     var li = lis[i];
+     li.index = i;
+     li.onmousedown = function (event) {
+     var _this = this;
+     var oldX = event.clientX;//鼠标按下的坐标X
+     var oldY = event.clientY;//鼠标按下的坐标Y
+     var oldLiX = _this.offsetLeft;//当前li的左位置
+     var oldLiY = _this.offsetTop;//当前li的Top位置
+     var ulLeft = ul.offsetLeft;
+     var ulTop = ul.offsetTop;
+     document.onmousemove = function (ev) {
+     var newX = ev.clientX;
+     var newY = ev.clientY;
+     var offX = newX - oldX;
+     var offY = newY - oldY;
+     var offLiX = oldLiX + offX;
+     var offLiY = oldLiY + offY;
+     _this.style.cssText = `left:${offLiX}px;top:${offLiY}px;z-index:${zIndex};`;
+     oldX = newX;
+     oldY = newY;
+     oldLiX = offLiX;
+     oldLiY = offLiY;
+     scaleLi(ev, ulTop, ulLeft, _this);//底下目标变大
+     };
+     document.onmouseup = function (evt) {
+     document.onmousemove = '';
+     changeDom(evt, ulTop, ulLeft, _this);//互换位置
+     };
+     return false;
+     };
+     }
+     }
+
+     /!**
+     *被碰撞的节点放大
+     * @param evt 鼠标事件
+     * @param ulTop ul距离浏览器的top距离
+     * @param ulLeft ul距离浏览器的left距离
+     * @param _this 当前拖动的节点
+     *!/
+     function scaleLi(ev, ulTop, ulLeft, _this) {
+     var downIndex = getIndex(ev, ulTop, ulLeft, _this);//当前底下的目标的下标
+     if (last_dom && last_dom != downIndex) {
+     lis[last_dom].style.transform = '';
+     lis[last_dom].style.transition = '';
+     }
+     if (downIndex) {
+     lis[downIndex].style.transition = 'all .1s';
+     lis[downIndex].style.transform = 'scale(1.06)';
+     last_dom = downIndex;
+     }
+     }
+
+     /!**
+     *替换相互碰撞的菜单
+     * @param evt 鼠标事件
+     * @param ulTop ul距离浏览器的top距离
+     * @param ulLeft ul距离浏览器的left距离
+     * @param dom 当前拖动的节点
+     *!/
+     function changeDom(evt, ulTop, ulLeft, dom) {
+     var this_index = dom.index;
+     var i = getIndex(evt, ulTop, ulLeft, dom);
+     if (i) {
+     [lisArr[i],lisArr[this_index]] = [lisArr[this_index], lisArr[i]];
+     lis[i].style.cssText = `left:${lisArr[i].left}px;top:${lisArr[i].top}px;transition :all .5s;z-index:${zIndex - 1};`;
+     }
+     lis[this_index].style.cssText = `left:${lisArr[this_index].left}px;top:${lisArr[this_index].top}px;transition :all .5s;z-index:${zIndex}`;
+     zIndex++;
+     }
+
+     /!**
+     * 碰撞检测
+     * @param evt 鼠标事件
+     * @param ulTop ul距离浏览器的top距离
+     * @param ulLeft ul距离浏览器的left距离
+     * @param dom 当前拖动的节点
+     * @returns {string} 返回当前被碰撞的节点序列化，即lisArr的key值
+     *!/
+     function getIndex(evt, ulTop, ulLeft, dom) {
+     var mouseLeft = evt.clientX + document.body.scrollLeft - document.body.clientLeft - ulLeft;
+     var mouseTop = evt.clientY + document.body.scrollTop - document.body.clientTop - ulTop;
+     for (let i in lisArr) {
+     var left = lisArr[i].left;
+     var top = lisArr[i].top;
+     if (mouseLeft - left <= liWidth && mouseLeft - left > 0 && mouseTop - top <= liHeight && mouseTop - top > 0 && dom.index != i) {
+     return i;
+     }
+     }
+     }
+
+     /!**
+     *重置单位菜单的位置，并存储起来
+     *!/
+     function resetDom() {
+     for (var i = 0, len = lis.length; i < len; i++) {
+     var obj = {};
+     var li = lis[i];
+     obj.left = i % 3 * liWidth;
+     obj.top = ~~(i / 3) * liHeight;
+     li.style.left = obj.left + 'px';
+     li.style.top = obj.top + 'px';
+     lisArr[i] = obj;
+     }
+     }*/
+
+
+</script>
+</body>
+</html>
